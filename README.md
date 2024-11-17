@@ -39,9 +39,8 @@
 
 ---
 
-## 🔧 Installation
-
-1. Clone the repository:  
+## 🔧 Installation & Running the app
+ 
    ```bash
    git clone https://github.com/KareemElozeiri/Basmagly.git
    cd Basmagly
