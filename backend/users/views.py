@@ -94,7 +94,7 @@ class UpdateProfilePictureView(APIView):
 
     def put(self, request):
         profile = request.user.userprofile
-        # Pass request to serializer context for user validation
+        # Ensure the request contains the file in 'profile_picture'
         serializer = UserProfileSerializer(profile, data=request.data, 
                                            partial=True, 
                                            context={'request': request})
@@ -102,7 +102,7 @@ class UpdateProfilePictureView(APIView):
             serializer.save()
             return Response({"message": "Profile picture updated successfully."})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 class DocumentUploadView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
