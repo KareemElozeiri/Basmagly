@@ -14,6 +14,7 @@
 }
 .container{
     display:flex;
+    align-items: center;
 }
 main{
     width: 100%;
@@ -21,17 +22,19 @@ main{
 }
 
 /* Sidear */
-
-.sidebar{
-    background: var(--secondary-color);
-    align-items: flex-start;
+.sidebar {
+    position: fixed; /* Keeps the sidebar fixed on the left */
+    top: 0;
     left: 0;
-    color: #fff;
-    height: 100vh;
     width: 220px;
-    transition: all 0.5s;
+    height: 100vh;
+    background: var(--secondary-color);
+    color: #fff;
     z-index: 2;
+    /* display: flex; */
+    flex-direction: column;
 }
+
 /* Top part */
 .top_section{
     display: flex;
@@ -161,4 +164,3 @@ main{
 .links a:hover {
   color: var(--hover-color);
 }
-

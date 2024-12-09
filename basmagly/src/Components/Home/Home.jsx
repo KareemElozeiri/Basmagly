@@ -47,7 +47,13 @@ const Home = ({Children}) => {
                 ))
             }
         </div>
-        <main className="main-content"> {Children}
+        <main 
+            className="main-content" 
+            style={{
+                marginLeft: isOpen ? "250px" : "50px", 
+                width: `calc(100% - ${isOpen ? "250px" : "50px"})`
+            }}
+        > {Children}
             <div className="navbar">
                 
                 <div className="links">

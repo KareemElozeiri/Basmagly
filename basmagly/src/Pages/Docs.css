@@ -1,168 +1,40 @@
-@import url('../Components/Home/Home.css');
-/* :root {
-    --primary-color: rgb(1, 1, 40);
-    --secondary-color: rgba(57, 57, 57, 0.41);
-    --hover-color: lightskyblue;
-} */
-/* Sidear */
-
-.sidebar{
-    background: var(--secondary-color);
-    align-items: flex-start;
-    left: 0;
-    color: #fff;
-    height: 100vh;
-    width: 220px;
-    transition: all 0.5s;
-    z-index: 2;
-}
-/* Top part */
-.top_section{
-    display: flex;
-    align-items:center;
-    padding:20px 15px;
-}
-.logo{
-    font-size: 30px;
-    margin-bottom: 20px;
-}
-.bars{
-    display: flex;
-    font-size: 20px;
-    margin-left: 1px;
-}
-.bars:hover{
-    color: var(--hover-color);
-}
-.link{
-    display: flex;
-    color: #fff;
-    padding: 10px 15px;
-    gap: 15px;
-    transition: all 0.5s;
-}
-.link:hover{
-    background: var(--hover-color);
-    color: #000;
-    transition: all 0.5s;
-}
-
-.active_section{
-    background: var(--hover-color);
-    color: #000;
-}
-.icon, .link_text{
-    font-size: 20px;
-}
-
-.main-content {
-    display: flex;
-    padding: 2rem;
-    height: 100vh;
-}
-
-.navbar {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    margin-top: 5px;
-    font-size: 16px;
-    align-items: center;
-    justify-content:end;
-    margin-bottom: 2rem;
-}
-
-.navbar .user-menu {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-}
-
-.navbar .user-photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-top: 10px;
-    margin-right: 15px;
-    overflow: hidden;
-    border: 2px solid white;
-}
-
-
-.navbar .user-photo:hover {
-    border-color: var(--hover-color);
-}
-
-.navbar .user-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.navbar .dropdown {
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background-color: white;
-    color: black;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 150px;
-    display: none; /* Hidden by default */
-    z-index: 1000;
-}
-
-.navbar .dropdown.show {
-    display: block; /* Show dropdown when toggled */
-}
-
-.navbar .dropdown a {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    color: black;
-    border-bottom: 1px solid #ddd;
-}
-
-.navbar .dropdown a:hover {
-    background-color: #f5f5f5;
-}
-
-.navbar .dropdown a:last-child {
-    border-bottom: none;
-}
-
-.links a {
-  margin-right: 1rem;
-  text-decoration: underline;
-  color: #fff;
-}
-
-.links a:hover {
-  color: var(--hover-color);
-}
-
-
 .documents-container {
     padding: 20px;
     width: 800vh;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: space-between; /* Space items to place the button at the bottom */
+    align-items: center;
     background-color: var(--secondary-color);
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 900px;
-    margin: 0 auto;
-  }
+    max-height: 500px;
+    margin: auto; /* Centers the container */
+    /* position: absolute; */
+    top: 50%;
+    left: 50%;
+}
+.documents-list {
+    max-height: 500px; /* Restrict the height to 500px */
+    overflow-y: auto; /* Add vertical scrolling when content exceeds max height */
+    width: 100%; /* Ensure it takes full width of the container */
+    padding-right: 10px; /* Add some padding to avoid overlap with the scrollbar */
+    box-sizing: border-box; /* Include padding in the total width */
+}
+
+/* Optional: Customize the scrollbar appearance */
+.documents-list::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.documents-list::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.6); /* Thumb color */
+    border-radius: 4px; /* Rounded edges */
+}
   
-  .documents-list {
-    margin-bottom: 20px;
-  }
-  
-  .document-item {
-    background-color: rgba(51, 43, 59, 0.1);
+.document-item {
+    background-color: rgba(76, 63, 90, 0.422);
     padding: 15px;
     margin: 10px 0;
     border-radius: 6px;
@@ -170,30 +42,34 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .document-name {
+    color: blanchedalmond;
+    max-height: 500px;
+}
+.document-item:hover{
+    background-color: rgba(76, 63, 90, 0.422);
+}
+.document-name {
     font-size: 16px;
     font-weight: 600;
     display: flex;
     align-items: center;
     gap: 10px;
-  }
+}
   
-  .expand-btn {
+.expand-btn {
     background-color: transparent;
     border: none;
     font-size: 18px;
     cursor: pointer;
     color: #6c6c6c;
-  }
-  
-  .document-actions {
+}
+
+.document-actions {
     display: flex;
     gap: 15px;
-  }
-  
-  .delete-btn, .download-btn {
+}
+
+.delete-btn, .download-btn {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -202,20 +78,20 @@
     cursor: pointer;
     font-weight: 600;
     transition: background-color 0.3s ease;
-  }
-  
-  .delete-btn:hover, .download-btn:hover {
+}
+
+.delete-btn:hover, .download-btn:hover {
     background-color: #000;
-  }
-  
-  .upload-container {
+}
+
+.upload-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-  }
-  
-  .upload-btn {
+}
+
+.upload-btn {
     background-color: var(--primary-color);
     color: white;
     padding: 12px 20px;
@@ -226,32 +102,15 @@
     font-size: 16px;
     transition: background-color 0.3s ease;
     margin-right: 20px;
-  }
-  
-  .upload-btn:hover {
+}
+
+.upload-btn:hover {
     background-color: #000;
-  }
-  
-  .file-input {
+}
+
+.file-input {
     display: none;
-  }
-  
-  /* For responsiveness */
-  @media (max-width: 768px) {
-    .document-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .document-actions {
-      margin-top: 10px;
-      width: 100%;
-      justify-content: flex-start;
-    }
-  
-    .upload-btn {
-      font-size: 14px;
-      padding: 10px 15px;
-    }
-  }
+}
+
+
   
