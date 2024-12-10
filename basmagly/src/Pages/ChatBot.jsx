@@ -5,8 +5,8 @@ import './ChatBot.css'
 const ChatBot = () => {
 
     useEffect(() => {
-        document.title = "Chatbot - Basmagly"; // Set the title
-    }, []); // Runs once when the component mounts
+        document.title = "Chatbot - Basmagly"; 
+    }, []);
 
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');

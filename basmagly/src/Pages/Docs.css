@@ -81,7 +81,8 @@
 }
 
 .delete-btn:hover, .download-btn:hover {
-    background-color: #000;
+    background-color: #333;
+    color: var(--hover-color);
 }
 
 .upload-container {
@@ -93,7 +94,7 @@
 
 .upload-btn {
     background-color: var(--primary-color);
-    color: white;
+    color: #4c3d7a;
     padding: 12px 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -105,7 +106,8 @@
 }
 
 .upload-btn:hover {
-    background-color: #000;
+    background-color: #333;
+    color: var(--hover-color);
 }
 
 .file-input {

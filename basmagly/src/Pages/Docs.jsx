@@ -1,90 +1,110 @@
-import React, {useEffect, useState, setDocuments} from "react";
-import "./Docs.css";
+import React, { useEffect, useState } from "react";
+import { BiTrash } from "react-icons/bi";
+import axios from "../APIs/axios"; // Adjust the path as necessary
+import Cookies from "js-cookie"; // Assuming cookies are used for authentication
+import './Docs.css'; // Add a specific style file for the Documents page
 
-const DocumentManagement = () => {
+const Documents = () => {
 
-  // const documents = [
-  //   { name: "Document A" },
-  //   { name: "Document B" },
-  //   { name: "Document C" },
-  // ];
+    const BASEURL = 'http://127.0.0.1:8000/';
+    
+    const [documents, setDocuments] = useState([]);
+    const [file, setFile] = useState(null);
+    const [errMsg, setErrMsg] = useState("");
 
-  useEffect(() => {
-      document.title = "Documents - Basmagly"; // Set the title
-  }, []); // Runs once when the component mounts
+    // Fetch user documents
+    const fetchDocuments = async () => {
+        try {
+        const authToken = Cookies.get("authToken");
+        const response = await axios.get(BASEURL+"documents/", {
+            headers: { Authorization: `Token ${authToken}` },
+        });
+        setDocuments(response.data.documents);
+        } catch (error) {
+        setErrMsg("Failed to fetch documents. Please try again.");
+        }
+    };
 
-  const [documents, setDocuments] = useState([]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+    useEffect(() => {
+        document.title = "Documents - Basmagly";
+        fetchDocuments();
+    }, []);
 
-  const handleFileUpload = (event) => {
-      const files = Array.from(event.target.files); // Convert FileList to Array
-      const newDocuments = files.map((file) => ({
-          name: file.name,       // Store the name of the file
-          file: file,            // Store the file object
-      }));
+    // Handle file upload
+    const handleUpload = async () => {
+        if (!file) {
+        setErrMsg("Please select a file to upload.");
+        return;
+        }
 
-      // Update the documents and uploaded files state
-      setDocuments([...documents, ...newDocuments]);
-      setUploadedFiles([...uploadedFiles, ...files]); // Storing the actual files in a separate variable
-  };
+        const formData = new FormData();
+        formData.append("file", file);
 
-  const handleDelete = (index) => {
-      // Remove the document at the specified index
-      const newDocuments = documents.filter((_, i) => i !== index);
-      setDocuments(newDocuments);
-      // Optionally remove the file from the uploaded files as well
-      const newUploadedFiles = uploadedFiles.filter((_, i) => i !== index);
-      setUploadedFiles(newUploadedFiles);
-  };
+        try {
+        const authToken = Cookies.get("authToken");
+        const response = await axios.post(BASEURL+"documents/upload", formData, {
+            headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "multipart/form-data",
+            },
+        });
 
-  const handleDownload = (file) => {
-      // Trigger file download (for demonstration, using Blob)
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(file);
-      link.download = file.name;
-      link.click();
-  };
+        if (response.status === 201) {
+            setErrMsg("");
+            fetchDocuments();
+        }
+        } catch (error) {
+        setErrMsg("Failed to upload document. Please try again.");
+        }
+    };
 
-  return (
-      <div className="documents-container">
-          <div className="documents-list">
-              {documents.map((doc, index) => (
-                  <div className="document-item" key={index}>
-                      <div className="document-name">
-                          {doc.name}
-                          <button className="expand-btn">▼</button>
-                      </div>
-                      <div className="document-actions">
-                          <button 
-                              className="delete-btn" 
-                              onClick={() => handleDelete(index)}
-                          >
-                              Delete
-                          </button>
-                          <button 
-                              className="download-btn" 
-                              onClick={() => handleDownload(doc.file)}
-                          >
-                              Download
-                          </button>
-                      </div>
-                  </div>
-              ))}
-          </div>
-          <div className="upload-container">
-              <label htmlFor="file-upload" className="upload-btn">
-                  Upload Your Files
-              </label>
-              <input
-                  id="file-upload"
-                  type="file"
-                  multiple
-                  onChange={handleFileUpload}
-                  className="file-input"
-              />
-          </div>
-      </div>
+    // Handle document deletion
+    const handleDelete = async (docId) => {
+        try {
+        const authToken = Cookies.get("authToken");
+        const response = await axios.delete(`${BASEURL}documents/${docId}`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+        });
+
+        if (response.status === 200) {
+            setErrMsg("");
+            setDocuments((prevDocs) => prevDocs.filter((doc) => doc.id !== docId));
+        }
+        } catch (error) {
+        setErrMsg("Failed to delete document. Please try again.");
+        }
+    };
+
+    return (
+        <div className="documents-section">
+        <h1>Manage Your Documents</h1>
+        
+        <div className="upload-section">
+            <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+            <button onClick={handleUpload}>Upload</button>
+            {errMsg && <p className="error-message">{errMsg}</p>}
+        </div>
+
+        <div className="documents-list">
+            {documents.length > 0 ? (
+            documents.map((doc) => (
+                <div key={doc.id} className="document-item">
+                <div>
+                    <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                    {doc.name}
+                    </a>
+                </div>
+                <button onClick={() => handleDelete(doc.id)}>
+                    <BiTrash />
+                </button>
+                </div>
+            ))
+            ) : (
+            <p>No documents found. Upload a document to get started.</p>
+            )}
+        </div>
+        </div>
     );
 };
 
-export default DocumentManagement;
+export default Documents;

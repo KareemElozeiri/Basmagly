@@ -8,13 +8,14 @@ import ChatBot from './Pages/ChatBot';
 import DocumentManagement from './Pages/Docs';
 import Quizzes from './Pages/Quizzes';
 import Default from './Pages/Default';
+import ProfilePage from './Components/Profile/Profile'
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginSignup />} />
-
+        <Route path="/profile" element={<ProfilePage />}/>
         <Route path="/home" element={<Home />}>
           <Route path="/home/default" element={<Default />} />
           <Route path="/home/documents" element={<DocumentManagement />} />

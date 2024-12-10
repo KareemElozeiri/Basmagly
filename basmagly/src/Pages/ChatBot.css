@@ -81,6 +81,11 @@
     align-items: center;
 }
 
+.select-document:hover{
+    background-color:#000;
+}
+
+
 .document-list {
     background-color: #fff;
     border: 1px solid #c5c4aa;

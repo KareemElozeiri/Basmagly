@@ -1,0 +1,192 @@
+:root {
+    --primary-color: rgb(1, 1, 40);
+    --secondary-color: rgba(57, 57, 57, 0.41);
+    --hover-color: lightskyblue;
+    --text-color: #4c3d7a;
+}
+/* General Container */
+.profile-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-color);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Navbar Section */
+.navbar {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.nav-button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-left: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background-color: #333;
+    color: var(--hover-color);
+}
+
+/* Content Section */
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between sidebar and profile-form */
+    padding: 20px;
+}
+
+/* Sidebar Section */
+.profile_sidebar {
+    width: 18%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--secondary-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-top: 20px;
+    margin-left: 20px;
+    border: 3px solid var(--primary-color);
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* Sidebar Options */
+.options {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option-button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+.option-button.active {
+    background-color: var(--primary-color);
+    color: var(--hover-color);
+}
+
+.option-button:hover {
+    background-color: var(--primary-color);
+    color: var(--hover-color);
+}
+
+/* Sidebar Username */
+.sidebar h3 {
+    font-size: 1.2rem;
+    color: var(--hover-color);
+    text-align: center;
+    margin-top: -10px;
+}
+
+
+/* Main Content Section */
+.profile-form {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    /* background-color: var(--secondary-color); */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+}
+
+input:disabled {
+    background-color: #f5f5f5;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.update-button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 50%; /* Button width */
+    text-align: center;
+}
+
+.update-button:hover {
+    color: var(--hover-color);
+}
+
+.sidebar-button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 10px 0;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 90%; /* Make the buttons fill most of the sidebar width */
+}
+
+.sidebar-button:hover {
+    background-color: var(--primary-color);
+    color: var(--hover-color);
+}
+
