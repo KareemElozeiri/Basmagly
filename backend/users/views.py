@@ -66,6 +66,32 @@ class UpdateUsernameView(APIView):
             return Response({"message": "Username updated successfully."})
         return Response({"error": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
 
+class UserInfoView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user  # The authenticated user making the request
+        
+        # Collect user details
+        user_info = {
+            "username": user.username,
+            "email": user.email,
+        }
+        
+        try:
+            profile = user.userprofile  # Assumes a OneToOne relationship with User
+            user_info.update({
+                "profile_picture": profile.profile_picture.url if profile.profile_picture else None
+            })
+        except AttributeError:
+            # Handle if UserProfile does not exist
+            user_info.update({"profile_picture": None})
+
+        return Response(user_info, status=status.HTTP_200_OK)
+
+
+
 class UpdatePasswordView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -102,7 +128,7 @@ class UpdateProfilePictureView(APIView):
             serializer.save()
             return Response({"message": "Profile picture updated successfully."})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        
 class DocumentUploadView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
