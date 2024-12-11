@@ -128,6 +128,36 @@ class UpdateProfilePictureView(APIView):
             serializer.save()
             return Response({"message": "Profile picture updated successfully."})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class UpdateUserInfoView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        data = request.data
+
+        new_name = data.get("name")  
+        new_username = data.get("username")
+        new_email = data.get("email")
+
+        if new_username:
+            if User.objects.exclude(pk=user.pk).filter(username=new_username).exists():
+                return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            user.username = new_username
+
+        if new_email:
+            if User.objects.exclude(pk=user.pk).filter(email=new_email).exists():
+                return Response({"error": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            user.email = new_email
+
+        if new_name:
+            user.first_name = new_name  
+
+        user.save()
+
+        return Response({"message": "User information updated successfully."}, status=status.HTTP_200_OK)
         
 class DocumentUploadView(APIView):
     authentication_classes = [TokenAuthentication]
