@@ -24,8 +24,8 @@ const Home = ({ Children }) => {
         document.title = "Home - Basmagly";
 
         // Fetch user image from cookies
-        const image = Cookies.get('userImage');
-        if (image) setUserImage(image);
+        // const image = Cookies.get('userImage');
+        // if (image) setUserImage(image);
     }, []);
 
     return (
@@ -66,7 +66,7 @@ const Home = ({ Children }) => {
                     </div>
                     <div className="user-menu" onClick={toggleDropdown}>
                         <div className="user-photo">
-                            <img src={userImage} alt="User" />
+                            <img src="https://via.placeholder.com/150" alt="User" />
                         </div>
                         <div className={`dropdown ${isDropdownOpen ? "show" : ""}`}>
                             <a href="/profile">Profile</a>

@@ -6,7 +6,7 @@ import {FaUser, FaLock} from "react-icons/fa"
 import { MdDriveFileRenameOutline, MdOutlineMail } from "react-icons/md";
 import './LoginSignup.css'
 import axios from "../../APIs/axios"
-import Cookies from 'cookie'
+import Cookies from 'js-cookie';
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -37,11 +37,11 @@ const LoginSignup = () => {
                 { headers: { 'Content-Type': 'application/json' } }
             );
     
-            if (response.status === 200 && response.data.token) {
-                // Save token in cookies
+            if (response.status === 200) {
+                // Save token in cookies                
                 Cookies.set('authToken', response.data.token, { expires: 7 }); // Token valid for 7 days
-                Cookies.set('userImage', response.data.user.image || '/images/default-avatar.jpg', { expires: 7 });
                 setErrMsg(''); 
+                
                 navigate("/home/default"); 
             } else {
                 setErrMsg("Login failed. Invalid username or password.");
