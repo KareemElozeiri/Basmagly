@@ -16,6 +16,13 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 
 from .models import UserProfile, Document
 from django.http import HttpResponse
+from .rag import RAGAgent 
+import os
+from django.conf import settings
+import PyPDF2
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class UserSignupView(APIView):
@@ -220,3 +227,147 @@ class DocumentDownloadView(APIView):
         response = HttpResponse(document.file, content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{document.file.name}"'
         return response
+    
+
+rag_service = RAGAgent()
+
+
+class DocumentContextView(APIView):
+    """
+    Manages documents in the RAG context
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Add documents to RAG context"""
+        document_ids = request.data.get('document_ids', [])
+        documents = Document.objects.filter(id__in=document_ids, user=request.user)
+
+        if not documents.exists():
+            return Response(
+                {"error": "No valid documents found"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        docs_for_rag = []
+        serializer = DocumentSerializer(documents, many=True)
+
+        for doc in serializer.data:
+            try:
+                # Resolve the file path
+                file_path = os.path.join(settings.BASE_DIR, doc['file'][1:])
+                
+                # Read the PDF content
+                with open(file_path, 'rb') as f:
+                    pdf_reader = PyPDF2.PdfReader(f)
+                    content = ""
+                    for page in pdf_reader.pages:
+                        content += page.extract_text()
+                
+                docs_for_rag.append({
+                    'id': doc['id'],
+                    'content': content
+                })
+            except Exception as e:
+                return Response(
+                    {"error": f"Error reading file {doc['id']}: {str(e)}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+        
+        try:
+            rag_service.add_documents(docs_for_rag, request.user.id)
+            return Response({
+                "message": "Documents added to context successfully",
+                "document_count": len(docs_for_rag)
+            })
+        except Exception as e:
+            return Response(
+                {"error": f"Error adding documents to context: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
+    def delete(self, request):
+        """Remove documents from RAG context"""
+        document_ids = request.data.get('document_ids', [])
+        try:
+            rag_service.remove_documents(document_ids, request.user.id)
+            return Response({
+                "message": "Documents removed from context successfully"
+            })
+        except Exception as e:
+            return Response(
+                {"error": f"Error removing documents: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+class QuizGenerationView(APIView):
+    """
+    Generates quizzes based on documents in context
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            num_questions = request.data.get('num_questions', 5)
+            questions = rag_service.generate_quiz(
+                request.user.id,
+                num_questions=num_questions
+            )
+            
+            return Response({
+                "quiz": {
+                    "questions": questions,
+                    "total_questions": len(questions)
+                }
+            })
+            
+        except ValueError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Error generating quiz: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class QuestionAnsweringView(APIView):
+    """
+    Answers questions about documents in context
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        question = request.data.get('question')
+        if not question:
+            return Response(
+                {"error": "Question is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            answer_data = rag_service.answer_question(
+                question,
+                request.user.id
+            )
+            
+            return Response({
+                "question": question,
+                "answer": answer_data["answer"],
+                "supporting_context": answer_data["context"]
+            })
+            
+        except ValueError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Error answering question: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
