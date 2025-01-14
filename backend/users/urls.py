@@ -12,6 +12,9 @@ from .views import (
     DocumentListView,
     DocumentDetailView,
     DocumentDownloadView,
+    DocumentContextView,
+    QuizGenerationView,
+    QuestionAnsweringView
 )
 
 urlpatterns = [
@@ -26,5 +29,9 @@ urlpatterns = [
     path('documents/upload/', DocumentUploadView.as_view(), name='document_upload'),
     path('documents/', DocumentListView.as_view(), name='document_list'),
     path('documents/<int:pk>/', DocumentDetailView.as_view(), name='document_detail'),
-    path('documents/<int:pk>/download/', DocumentDownloadView.as_view(), name='document_download')
+    path('documents/<int:pk>/download/', DocumentDownloadView.as_view(), name='document_download'),
+    path('chat/add_documents/', DocumentContextView.as_view(), name="add_chat_context"),
+    path('chat/generate_quiz/', QuizGenerationView.as_view(), name="generate_quiz"),
+    path('chat/answer_question/', QuestionAnsweringView.as_view(), name="answer_questions")
+
 ]
