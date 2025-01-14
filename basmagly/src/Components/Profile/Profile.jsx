@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { IoCameraOutline } from "react-icons/io5";
 import axios from "../../APIs/axios";
 import "./Profile.css";
+import Cookies from "js-cookie"
 
 const ProfilePage = () => {
 
@@ -14,30 +16,39 @@ const ProfilePage = () => {
   });
 
   const [sidebarData, setSidebarData] = useState({
-    name: "Alexa Rawles",
-    username: "alexarawles",
+    name: "",
+    username: "",
   });
 
   const [passwordData, setPasswordData] = useState({
-    oldPassword: "",
-    newPassword: "",
+    old_password: "",
+    new_password: "",
   });
-
+  const authToken = Cookies.get("authToken");
   const [activeForm, setActiveForm] = useState("profile"); // Track which form is active
 
   useEffect(() => {
     document.title = "profile";
-
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(BASEURL+"get_user_info/");
+        const response = await axios.get(BASEURL+"get-user-info/",{
+          headers: {
+            Authorization: `Token ${authToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log('Response', profilePhoto);
         const { name, username, email, profilePhoto } = response.data;
-
+        
         setUserData({
           name: name || "",
           username: username || "",
           email: email || "",
           profilePhoto: profilePhoto || "https://via.placeholder.com/150",
+        });
+        setSidebarData({
+          name: name || "",
+          username: username || "",
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -69,6 +80,11 @@ const ProfilePage = () => {
         name: userData.name,
         username: userData.username,
         email: userData.email,
+      },{
+        headers: {
+          Authorization: `Token ${authToken}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       setSidebarData({
@@ -86,13 +102,13 @@ const ProfilePage = () => {
   const handlePasswordUpdate = async () => {
     try {
       await axios.post(BASEURL+"update-password/", {
-        oldPassword: passwordData.oldPassword,
-        newPassword: passwordData.newPassword,
+        old_password: passwordData.old_password,
+        new_password: passwordData.new_password,
       });
 
       setPasswordData({
-        oldPassword: "",
-        newPassword: "",
+        old_password: "",
+        new_password: "",
       });
 
       alert("Password updated successfully!");
@@ -106,18 +122,29 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (file) {
       const formData = new FormData();
-      formData.append("profilePhoto", file);
+      formData.append("profile_picture", file);
+
+      console.log("I am here");
+
 
       try {
-        const response = await axios.post(BASEURL+"update-profile-picture/", formData, {
+        const authToken = Cookies.get("authToken");
+        const response = await axios.put(BASEURL+"update-profile-picture/", formData, {
           headers: {
+            Authorization: `Token ${authToken}`,
             "Content-Type": "multipart/form-data",
           },
         });
 
+        const photo_response = await axios.get(BASEURL+"get-user-info/",{
+          headers: {
+            Authorization: `Token ${authToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
         setUserData((prevData) => ({
           ...prevData,
-          profilePhoto: response.data.profilePhoto,
+          profilePhoto: photo_response.data.profilePhoto,
         }));
 
         alert("Profile photo updated successfully!");
@@ -142,21 +169,31 @@ const ProfilePage = () => {
         <div className="content">
             {/* Sidebar Section */}
             <aside className="profile_sidebar">
-            <img
-                src={userData.profilePhoto}
-                alt="User"
-                className="profile-image"
-            />
-            <h2>{sidebarData.name}</h2>
-            <h3>@{sidebarData.username}</h3>
-            <button className="sidebar-button" onClick={() => setActiveForm("profile")}>
+              <div className="profile-image-wrapper">
+                <img
+                  src={userData.profilePhoto}
+                  alt="User"
+                  className="profile-image"
+                />
+                <label htmlFor="profilePhotoUpload" className="camera-icon">
+                  <input
+                    id="profilePhotoUpload"
+                    type="file"
+                    onChange={handlePhotoUpload}
+                    style={{ display: "none" }}
+                  />
+                  <span className="camera-icon-span"><IoCameraOutline /></span> {/* Unicode for Camera Emoji */}
+                </label>
+              </div>
+              <h2>{sidebarData.name}</h2>
+              <h3>@{sidebarData.username}</h3>
+              <button className="sidebar-button" onClick={() => setActiveForm("profile")}>
                 Edit Personal Info
-            </button>
-            <button className="sidebar-button" onClick={() => setActiveForm("password")}>
+              </button>
+              <button className="sidebar-button" onClick={() => setActiveForm("password")}>
                 Change Password
-            </button>
+              </button>
             </aside>
-
             {/* Main Content Section */}
             <main className="profile-form">
             {activeForm === "profile" && (
@@ -191,13 +228,7 @@ const ProfilePage = () => {
                     placeholder="Your Email Address"
                     />
                 </div>
-                <div className="form-group">
-                    <label>Update Profile Photo</label>
-                    <input
-                    type="file"
-                    onChange={handlePhotoUpload}
-                    />
-                </div>
+                
                 <button className="update-button" onClick={handleSaveChanges}>
                     Save Changes
                 </button>
@@ -211,8 +242,8 @@ const ProfilePage = () => {
                     <label>Old Password</label>
                     <input
                     type="password"
-                    name="oldPassword"
-                    value={passwordData.oldPassword}
+                    name="old_password"
+                    value={passwordData.old_password}
                     onChange={handlePasswordChange}
                     placeholder="Enter Old Password"
                     />
@@ -221,8 +252,8 @@ const ProfilePage = () => {
                     <label>New Password</label>
                     <input
                     type="password"
-                    name="newPassword"
-                    value={passwordData.newPassword}
+                    name="new_password"
+                    value={passwordData.new_password}
                     onChange={handlePasswordChange}
                     placeholder="Enter New Password"
                     />
