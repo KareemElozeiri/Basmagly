@@ -5,3 +5,11 @@ pillow==11.0.0
 sqlparse==0.5.2
 typing_extensions==4.12.2
 django-cors-headers
+grok
+langchain
+langchain_community
+langchain_groq
+sentence-transformers
+numpy
+PyPDF2
+python-dotenv
