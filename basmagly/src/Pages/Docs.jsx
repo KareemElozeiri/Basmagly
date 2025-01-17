@@ -1,46 +1,52 @@
 import React, { useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import { FaDownload } from "react-icons/fa6";
-import axios from "../APIs/axios"; // Adjust the path as necessary
-import Cookies from "js-cookie"; // Assuming cookies are used for authentication
-import "./Docs.css"; // Add a specific style file for the Documents page
+import axios from "../APIs/axios";
+import Cookies from "js-cookie";
+import "./Docs.css"
 
 const Documents = () => {
+  const BASEURL = "http://127.0.0.1:8000/";
+  const [documents, setDocuments] = useState([]);
+  const [selectedDocuments, setSelectedDocuments] = useState([]); // Changed to array for multiple selection
+  const [file, setFile] = useState(null);
+  const [errMsg, setErrMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const BASEURL = "http://127.0.0.1:8000/"; // Adjust base URL as necessary
-  const [documents, setDocuments] = useState([]); // State to store documents
-  const [file, setFile] = useState(null); // State for file uploads
-  const [errMsg, setErrMsg] = useState(""); // State for error messages
+  const getAuthHeaders = () => ({
+    headers: { 
+      Authorization: `Token ${Cookies.get("authToken")}`
+    }
+  });
 
-  // Fetch documents from the backend
   const fetchDocuments = async () => {
     try {
-      const authToken = Cookies.get("authToken");
-      const response = await axios.get(`${BASEURL}documents/`, {
-        headers: { Authorization: `Token ${authToken}` },
-      });
-      const documentList = response.data.map(doc => {
-        const filePath = 'backend' + doc.file; 
-        const fileName = filePath.split('/').pop(); 
-        const id = doc.id; 
-        return { id, filePath, fileName }; 
-      });
-      setDocuments(documentList);  
-      console.log('documents:',documentList);
-      console.log('response:',response);
+      setIsLoading(true);
+      const response = await axios.get(
+        `${BASEURL}documents/`, 
+        getAuthHeaders()
+      );
+      
+      const documentList = response.data.map(doc => ({
+        id: doc.id,
+        fileName: doc.file.split('/').pop(),
+        file: doc.file
+      }));
+      
+      setDocuments(documentList);
     } catch (error) {
       console.error("Error fetching documents:", error);
       setErrMsg("Failed to fetch documents. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Effect to set page title and fetch documents
   useEffect(() => {
     document.title = "Documents - Basmagly";
-    fetchDocuments();   
+    fetchDocuments();
   }, []);
 
-  // Handle file upload
   const handleUpload = async () => {
     if (!file) {
       setErrMsg("Please select a file to upload.");
@@ -51,88 +57,178 @@ const Documents = () => {
     formData.append("file", file);
 
     try {
-      const authToken = Cookies.get("authToken");
-      const response = await axios.post(BASEURL + "documents/upload/", formData, {
-        headers: {
-          Authorization: `Token ${authToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      setIsLoading(true);
+      const response = await axios.post(
+        `${BASEURL}documents/upload/`, 
+        formData,
+        {
+          ...getAuthHeaders(),
+          headers: {
+            ...getAuthHeaders().headers,
+            "Content-Type": "multipart/form-data",
+          }
+        }
+      );
 
       if (response.status === 201) {
         setErrMsg("");
-        fetchDocuments(); // Refresh document list after successful upload
+        setFile(null);
+        fetchDocuments();
       }
     } catch (error) {
       console.error("Error uploading document:", error);
       setErrMsg("Failed to upload document. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Handle document deletion
   const handleDelete = async (docId) => {
     try {
-      const authToken = Cookies.get("authToken");
-      const response = await axios.delete(`${BASEURL}documents/${docId}/`, {
-        headers: { Authorization: `Token ${authToken}` },
-        "Content-Type": "multipart/form-data",
-      });
+      setIsLoading(true);
+      const response = await axios.delete(
+        `${BASEURL}documents/${docId}/`,
+        getAuthHeaders()
+      );
 
       if (response.status === 204) {
         setErrMsg("");
-        setDocuments((prevDocs) => prevDocs.filter((doc) => doc.id !== docId));
-        fetchDocuments();
+        setSelectedDocuments(prev => prev.filter(id => id !== docId));
+        await fetchDocuments();
       }
     } catch (error) {
       console.error("Error deleting document:", error);
       setErrMsg("Failed to delete document. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDownload = async (doc) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        `${BASEURL}documents/${doc.id}/download/`,
+        {
+          ...getAuthHeaders(),
+          responseType: 'blob'
+        }
+      );
+      
+      // Create a blob URL and trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', doc.fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading document:", error);
+      setErrMsg("Failed to download document. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStartStudy = async () => {
+    if (selectedDocuments.length === 0) {
+      setErrMsg("Please select at least one document to study.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        `${BASEURL}chat/add_documents/`,
+        { document_ids: selectedDocuments },
+        getAuthHeaders()
+      );
+      
+      if (response.status === 200) {
+        setErrMsg("");
+        // You might want to redirect to the chat/study page here
+      }
+    } catch (error) {
+      console.error("Error starting study session:", error);
+      setErrMsg("Failed to start study session. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="documents-section">
+    <div className="documents-management">
       <h1>Manage Your Documents</h1>
       
       {/* Upload Section */}
       <div className="upload-section">
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-        <button className='upload-btn' onClick={handleUpload}>Add Document</button>
-        {errMsg && <p className="error-message">{errMsg}</p>}
+        <input 
+          type="file" 
+          onChange={(e) => setFile(e.target.files[0])}
+          disabled={isLoading}
+        />
+        <button 
+          className="upload-btn" 
+          onClick={handleUpload}
+          disabled={isLoading || !file}
+        >
+          Add Document
+        </button>
       </div>
+
+      {errMsg && <p className="error-message">{errMsg}</p>}
 
       {/* Document List Section */}
       <div className="documents-list">
-        {documents.length > 0 ? (
-          documents.map((doc) => (
-            <div key={doc.fileName} className="document-item">
-              <div>
-                  {doc.fileName}
-              </div>
-               {/* Download Button */}
-                <button
-                onClick={() => {
-                    const fileUrl = `backend${doc.filePath}`; // Correctly construct the file URL
-                    const anchor = document.createElement('a'); // Create an anchor element
-                    anchor.href = fileUrl; // Set the file URL
-                    anchor.download = doc.fileName; // Set the suggested file name for download
-                    anchor.click(); // Trigger the download
-                }}
-                className="download-button"
-                >
-                <FaDownload />
-                </button>
-
-
-                {/* Delete Button */}
-                <button onClick={() => handleDelete(doc.id)} className="delete-button">
-                <BiTrash />
-                </button>
-            </div>
-          ))
-        ) : (
+        {isLoading && <p>Loading...</p>}
+        
+        {!isLoading && documents.length === 0 && (
           <p>No documents found. Upload a document to get started.</p>
         )}
+
+        {!isLoading && documents.map((doc) => (
+          <div key={doc.id} className="document-item">
+            <input
+              type="checkbox"
+              checked={selectedDocuments.includes(doc.id)}
+              onChange={(e) => {
+                setSelectedDocuments(prev =>
+                  e.target.checked
+                    ? [...prev, doc.id]
+                    : prev.filter(id => id !== doc.id)
+                );
+              }}
+            />
+            <span>{doc.fileName}</span>
+            
+            <button
+              onClick={() => handleDownload(doc)}
+              className="download-button"
+              disabled={isLoading}
+            >
+              <FaDownload />
+            </button>
+
+            <button 
+              onClick={() => handleDelete(doc.id)}
+              className="delete-button"
+              disabled={isLoading}
+            >
+              <BiTrash />
+            </button>
+          </div>
+        ))}
       </div>
+
+      <button 
+        onClick={handleStartStudy}
+        className="study-button"
+        disabled={isLoading || selectedDocuments.length === 0 || selectedDocuments.length > 1}
+      >
+        Start Studying Selected Documents
+      </button>
     </div>
   );
 };
