@@ -25,6 +25,15 @@ CONNECTION_STR = {
     pair.split('=')[0]:pair.split('=')[1] for pair in   CONNECTION.split(' ')
 }
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
@@ -36,3 +45,4 @@ DATABASES = {
 }
 
 MEDIA_ROOT = BASE_DIR/'media'
+STATIC_ROOT = BASE_DIR/'static_files'
