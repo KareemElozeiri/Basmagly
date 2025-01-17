@@ -29,6 +29,9 @@ const ProfilePage = () => {
 
   useEffect(() => {
     document.title = "profile";
+
+    
+
     const fetchUserData = async () => {
       try {
         const response = await axios.get(BASEURL+"get-user-info/",{
@@ -37,9 +40,8 @@ const ProfilePage = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log('Response', profilePhoto);
         const { name, username, email, profilePhoto } = response.data;
-        
+
         setUserData({
           name: name || "",
           username: username || "",
@@ -101,9 +103,14 @@ const ProfilePage = () => {
 
   const handlePasswordUpdate = async () => {
     try {
-      await axios.post(BASEURL+"update-password/", {
+      await axios.put(BASEURL+"update-password/", {
         old_password: passwordData.old_password,
         new_password: passwordData.new_password,
+      }, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       setPasswordData({
@@ -126,7 +133,6 @@ const ProfilePage = () => {
 
       console.log("I am here");
 
-
       try {
         const authToken = Cookies.get("authToken");
         const response = await axios.put(BASEURL+"update-profile-picture/", formData, {
@@ -135,16 +141,9 @@ const ProfilePage = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-
-        const photo_response = await axios.get(BASEURL+"get-user-info/",{
-          headers: {
-            Authorization: `Token ${authToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
         setUserData((prevData) => ({
           ...prevData,
-          profilePhoto: photo_response.data.profilePhoto,
+          profilePhoto: response.data.profilePhoto,
         }));
 
         alert("Profile photo updated successfully!");
