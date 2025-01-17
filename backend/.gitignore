@@ -108,3 +108,5 @@ dmypy.json
 
 # Custom
 local_settings.py
+
+media/

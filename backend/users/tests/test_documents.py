@@ -73,7 +73,7 @@ class DocumentViewsTest(TestCase):
             file=self.pdf_file.name,
         )
         
-        url = reverse('document_detail', kwargs={'pk': document.id})
+        url = reverse('document_detail', kwargs={'pk': document.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Document.objects.filter(pk=document.pk).exists())

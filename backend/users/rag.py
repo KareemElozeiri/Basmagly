@@ -19,7 +19,6 @@ class GenerationModel:
         )
     
     def generate_answer(self, question: str, context: str) -> str:
-        """Generate an answer based on context"""
         prompt = f"""You are a helpful teacher who helps students and answers their questions based only on the provided context. 
         If the context doesn't contain enough information, say so.
 
@@ -33,7 +32,6 @@ class GenerationModel:
         return response.content
     
     def generate_quiz_question(self, context: str) -> Optional[Dict]:
-        """Generate a quiz question based on context"""
         prompt = f"""You are a helpful teacher who helps students study by creating quizzes for them. Based only on the following text, generate a multiple choice question with 3 options. 
         Format your response as a JSON object with the following structure:
         {{
@@ -51,7 +49,6 @@ class GenerationModel:
             return None
     
     def generate_summary(self, text: str) -> str:
-        """Generate a summary of the provided text"""
         prompt = f"""Generate a concise summary of the following text. 
         Include the main points and key insights.
 
