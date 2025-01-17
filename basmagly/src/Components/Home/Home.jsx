@@ -4,8 +4,13 @@ import { FaBars, FaHome } from "react-icons/fa";
 import { BiFile, BiChat, BiTask } from 'react-icons/bi';
 import Cookies from 'js-cookie'; // Import for accessing cookies
 import './Home.css';
+import AboutPage from "../About/About";
+import FeedbackPage from "../Feedback/FeedbackPage"
+import Theme from "../Theme/Theme";
 
 const Home = ({ Children }) => {
+
+    const [isDark, setIsDark] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [userImage, setUserImage] = useState('/images/default-avatar-profile-icon-of-social-media-user-vector.jpg');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -21,15 +26,25 @@ const Home = ({ Children }) => {
     ];
 
     useEffect(() => {
+        // Get saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setIsDark(savedTheme === 'dark');
+            document.body.classList.toggle('dark-mode', savedTheme === 'dark');
+        }
+        
         document.title = "Home - Basmagly";
-
-        // Fetch user image from cookies
-        // const image = Cookies.get('userImage');
-        // if (image) setUserImage(image);
     }, []);
 
+    const handleThemeToggle = () => {
+        const newTheme = !isDark;
+        setIsDark(newTheme);
+        localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+        document.body.classList.toggle('dark-mode', newTheme);
+    };
+
     return (
-        <div className="container">
+        <div className={`container ${isDark ? 'dark-mode' : ''}`}>
             <div style={{ width: isOpen ? "250px" : "50px" }} className="sidebar">
                 <div className="top_section">
                     <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">Basmagly</h1>
@@ -37,6 +52,7 @@ const Home = ({ Children }) => {
                         <FaBars onClick={toggle} />
                     </div>
                 </div>
+
                 {menuItem.map((item, index) => (
                     <NavLink
                         to={item.path}
@@ -50,6 +66,9 @@ const Home = ({ Children }) => {
                         </div>
                     </NavLink>
                 ))}
+
+                <Theme isDark={isDark} onToggle={handleThemeToggle} />
+                
             </div>
             <main
                 className="main-content"
@@ -61,8 +80,8 @@ const Home = ({ Children }) => {
                 {Children}
                 <div className="navbar">
                     <div className="links">
-                        <a href="#about">About Us</a>
-                        <a href="#contact">Contact Us</a>
+                        <NavLink to="/about">About Us</NavLink>
+                        <NavLink to="/feedback">Feedback</NavLink>
                     </div>
                     <div className="user-menu" onClick={toggleDropdown}>
                         <div className="user-photo">
@@ -74,6 +93,7 @@ const Home = ({ Children }) => {
                         </div>
                     </div>
                 </div>
+                
                 <Outlet />
             </main>
         </div>

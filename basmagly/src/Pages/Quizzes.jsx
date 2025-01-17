@@ -54,6 +54,8 @@ const Quizzes = () => {
     setLoading(true);
     setError(null);
     try {
+
+      console.log("N_q",numQuestions);
       // generate the quiz
       const response = await axios.post(
         `${BASEURL}chat/generate_quiz/`,

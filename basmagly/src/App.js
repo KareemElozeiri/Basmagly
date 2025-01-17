@@ -9,12 +9,16 @@ import DocumentManagement from './Pages/Docs';
 import Quizzes from './Pages/Quizzes';
 import Default from './Pages/Default';
 import ProfilePage from './Components/Profile/Profile'
+import AboutPage from "./Components/About/About";
+import FeedbackPage from "./Components/Feedback/FeedbackPage";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginSignup />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/profile" element={<ProfilePage />}/>
         <Route path="/home" element={<Home />}>
           <Route path="/home/default" element={<Default />} />

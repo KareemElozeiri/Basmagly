@@ -1,0 +1,110 @@
+/* Defined Vars */
+:root {
+    --primary-color: rgb(1, 1, 40);
+    --secondary-color: rgba(57, 57, 57, 0.41);
+    --hover-color: lightskyblue;
+}
+
+.about-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--secondary-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.nav-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color, #007bff);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--primary-hover-color, #0056b3);
+}
+
+.about-content {
+    text-align: left;
+}
+
+.about-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-color, #333);
+    margin-bottom: 3rem; /* Increased spacing before team section */
+}
+
+.team-section {
+    margin-top: 3rem; /* Additional spacing above team section */
+}
+
+.team-section h3 {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    color: var(--heading-color, #2c3e50);
+}
+
+.team-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.team-member {
+    flex: 1;
+    min-width: 250px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color, #e1e1e1);
+    border-radius: 8px;
+    background-color: var(--primary-color);
+}
+
+.team-member h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--heading-color, #4b6681);
+    font-size: 1.2rem;
+}
+
+.team-member p {
+    margin: 0 0 1rem 0;
+    color: var(--text-secondary-color, #615151);
+}
+
+.linkedin-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    /* background-color: ; LinkedIn blue */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.linkedin-link:hover {
+    background-color: #006396;
+    text-decoration: none;
+}
+
+/* Dark mode support */
+.dark-mode .about-container {
+    background-color: var(--dark-background, #1a1a1a);
+    color: var(--dark-text, #ffffff);
+}
+
+.dark-mode .team-member {
+    background-color: var(--dark-card-background, #2d2d2d);
+    border-color: var(--dark-border-color, #404040);
+}

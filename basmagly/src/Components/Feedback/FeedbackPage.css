@@ -1,0 +1,215 @@
+/* Defined Vars */
+:root {
+    --primary-color: rgb(1, 1, 40);
+    --secondary-color: rgba(57, 57, 57, 0.41);
+    --hover-color: lightskyblue;
+}
+
+/* Feedback.css */
+.feedback-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+}
+
+.nav-button {
+    padding: 0.6rem 1.2rem;
+    background-color: var(--primary-color, #007bff);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--primary-hover-color, #0056b3);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Header styles */
+.feedback-container h2 {
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Form styles */
+.feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Rating section styles */
+.rating-container {
+    text-align: center;
+}
+
+.rating-container p {
+    font-size: 1.1rem;
+    color: var(--text-color, #333);
+    margin-bottom: 1rem;
+}
+
+.rating-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.rating-button {
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--primary-color, #007bff);
+    background: transparent;
+    color: var(--primary-color, #007bff);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.rating-button:hover {
+    background-color: var(--primary-color, #007bff);
+    color: white;
+    transform: scale(1.1);
+}
+
+.rating-button.selected {
+    background-color: var(--primary-color, #007bff);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Feedback input styles */
+.feedback-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.feedback-input label {
+    font-size: 1.1rem;
+    color: var(--text-color, #333);
+    font-weight: 500;
+}
+
+.feedback-input textarea {
+    min-height: 150px;
+    padding: 1rem;
+    border: 2px solid var(--border-color, #e1e1e1);
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+    background-color: gray;
+}
+
+.feedback-input textarea:focus {
+    outline: none;
+    border-color: var(--primary-color, #007bff);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Submit button styles */
+.submit-button {
+    background-color: rgb(1, 1, 40);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin: 1rem auto;
+    display: block;
+    min-width: 200px;
+}
+
+.submit-button:hover {
+    background-color: var(--primary-hover-color, #0056b3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+/* Contact email styles */
+.contact-email {
+    text-align: center;
+    color: var(--text-secondary-color, #666);
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color, #e1e1e1);
+}
+
+/* Dark mode support */
+.dark-mode .feedback-container {
+    background-color: var(--dark-background, #1a1a1a);
+    color: var(--dark-text, #ffffff);
+}
+
+.dark-mode .feedback-input textarea {
+    background-color: var(--dark-input-background, #2d2d2d);
+    border-color: var(--dark-border-color, #404040);
+    color: var(--dark-text, #ffffff);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .feedback-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .rating-buttons {
+        flex-wrap: wrap;
+    }
+
+    .submit-button {
+        width: 100%;
+    }
+}
+
+/* Loading and success states */
+.submit-button.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feedback-container {
+    animation: fadeIn 0.5s ease-out;
+}
