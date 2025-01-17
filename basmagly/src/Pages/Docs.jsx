@@ -225,7 +225,7 @@ const Documents = () => {
       <button 
         onClick={handleStartStudy}
         className="study-button"
-        disabled={isLoading || selectedDocuments.length === 1}
+        disabled={isLoading || selectedDocuments.length === 0 || selectedDocuments.length > 1}
       >
         Start Studying Selected Documents
       </button>
