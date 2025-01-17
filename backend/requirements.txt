@@ -7,7 +7,7 @@ typing_extensions
 django-cors-headers
 grok
 langchain_community
-langchain_groq=
+langchain_groq
 sentence-transformers
 numpy
 PyPDF2
