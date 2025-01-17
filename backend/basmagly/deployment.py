@@ -4,7 +4,6 @@ from .settings import BASE_DIR
 
 
 MEDIA_ROOT = BASE_DIR/'media'
-STATIC_ROOT = BASE_DIR/'static_files'
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 CSRF_TRUSTED_ORIGINS = ['https://'+os.environ['WEBSITE_HOSTNAME']]
 DEBUG = False
