@@ -2,6 +2,10 @@
     --primary-color: rgb(1, 1, 40);
     --secondary-color: rgba(57, 57, 57, 0.41);
     --hover-color: lightskyblue;
+    --bot-bg-color: #e0e0e0;
+    --bot-text-color: #333;
+    --context-border: #666;
+    --timestamp-color: #888;
 }
 
 /* Basic Chatbot Layout */
@@ -28,17 +32,32 @@
 
 .chat-display .header {
     text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
-.clear-chat {
+/* Button Styles */
+.clear-chat, .save-chat {
     background-color: transparent;
     border: none;
     cursor: pointer;
     color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    transition: color 0.3s ease;
 }
 
-.clear-chat:hover{
+.clear-chat:hover, .save-chat:hover {
     color: var(--hover-color);
+}
+
+/* Message Styles */
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .messages .user {
@@ -48,66 +67,84 @@
     padding: 10px;
     margin: 5px 0;
     border-radius: 10px;
+    max-width: 80%;
+    margin-left: auto;
 }
 
 .messages .bot {
     text-align: left;
-    background-color: #e0e0e0;
-    color: #333;
+    background-color: var(--bot-bg-color);
+    color: var(--bot-text-color);
     padding: 10px;
     margin: 5px 0;
     border-radius: 10px;
+    max-width: 80%;
+    margin-right: auto;
 }
 
+/* Message Content Styles */
+.message-content {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.message-context {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--context-border);
+    font-size: 0.9em;
+}
+
+.context-label {
+    color: var(--bot-text-color);
+    font-size: 0.85em;
+    font-weight: 500;
+    margin-bottom: 4px;
+    opacity: 0.8;
+}
+
+.context-content {
+    padding-left: 8px;
+    border-left: 3px solid var(--context-border);
+    margin-top: 5px;
+    font-size: 0.9em;
+    line-height: 1.4;
+    color: var(--bot-text-color);
+    opacity: 0.9;
+}
+
+.message-timestamp {
+    font-size: 0.75em;
+    color: var(--timestamp-color);
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.loading-indicator::after {
+    content: '...';
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+}
+
+/* Input Area */
 .chat-input-area {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.document-selection {
-    display: flex;
-    flex-direction: column;
-    margin-right: 10px;
-}
-
-.select-document {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.select-document:hover{
-    background-color:#000;
-}
-
-
-.document-list {
-    background-color: #fff;
-    border: 1px solid #c5c4aa;
-    border-radius: 5px;
-    position: absolute;
-    padding: 5px;
-    margin-top: 10px;
-}
-
-.document-item {
-    padding: 8px;
-    cursor: pointer;
-    color: #000;
-}
-
-.document-item:hover {
-    background-color: var(--hover-color);
-}
-
-.selected-document {
-    font-size: 14px;
-    color: #333;
+    gap: 10px;
 }
 
 .chat-input-area input[type="text"] {
@@ -115,6 +152,13 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.chat-input-area input[type="text"]:focus {
+    outline: none;
+    border-color: var(--hover-color);
 }
 
 .send-button {
@@ -123,15 +167,40 @@
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
-    align-items: center;
-    margin-left: 5px;
     display: flex;
+    align-items: center;
+    border: none;
+    transition: background-color 0.3s ease;
 }
 
-.send-button:hover {
+.send-button:hover:not(:disabled) {
     background-color: #000;
+}
+
+.send-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .send-button svg {
     margin-right: 8px;
+}
+
+/* Scrollbar Styles */
+.chat-display::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-display::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.chat-display::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.chat-display::-webkit-scrollbar-thumb:hover {
+    background: #000;
 }
