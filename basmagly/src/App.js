@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import logo from './logo.svg';
 import './App.css';
 import LoginSignup from './Components/LoginSignup/LoginSignup';
@@ -11,6 +11,7 @@ import Default from './Pages/Default';
 import ProfilePage from './Components/Profile/Profile'
 import AboutPage from "./Components/About/About";
 import FeedbackPage from "./Components/Feedback/FeedbackPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (

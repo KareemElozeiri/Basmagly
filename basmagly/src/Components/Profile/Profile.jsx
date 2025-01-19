@@ -170,7 +170,7 @@ const ProfilePage = () => {
             <aside className="profile_sidebar">
               <div className="profile-image-wrapper">
                 <img
-                  src={userData.profilePhoto}
+                  src={"https://picsum.photos/id/397/150/150.jpg"}
                   alt="User"
                   className="profile-image"
                 />

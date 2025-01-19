@@ -2,17 +2,13 @@ import React, { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { FaBars, FaHome } from "react-icons/fa";
 import { BiFile, BiChat, BiTask } from 'react-icons/bi';
-import Cookies from 'js-cookie'; // Import for accessing cookies
 import './Home.css';
-import AboutPage from "../About/About";
-import FeedbackPage from "../Feedback/FeedbackPage"
 import Theme from "../Theme/Theme";
 
 const Home = ({ Children }) => {
 
     const [isDark, setIsDark] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const [userImage, setUserImage] = useState('/images/default-avatar-profile-icon-of-social-media-user-vector.jpg');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const toggle = () => setIsOpen(!isOpen);
@@ -45,7 +41,7 @@ const Home = ({ Children }) => {
 
     return (
         <div className={`container ${isDark ? 'dark-mode' : ''}`}>
-            <div style={{ width: isOpen ? "250px" : "50px" }} className="sidebar">
+            <div data-testid="sidebar" style={{ width: isOpen ? "250px" : "50px" }} className="sidebar">
                 <div className="top_section">
                     <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">Basmagly</h1>
                     <div style={{ marginLeft: isOpen ? "40px" : "0px" }} className="bars">
@@ -58,7 +54,7 @@ const Home = ({ Children }) => {
                         to={item.path}
                         key={index}
                         className="link"
-                        activeclassName="active_section"
+                        activeclassname="active_section"
                     >
                         <div className="icon">{item.icon}</div>
                         <div style={{ display: isOpen ? "block" : "none" }} className="link_text">
@@ -85,7 +81,9 @@ const Home = ({ Children }) => {
                     </div>
                     <div className="user-menu" onClick={toggleDropdown}>
                         <div className="user-photo">
-                            <img src="https://via.placeholder.com/150" alt="User" />
+                        <img src="https://picsum.photos/id/397/150/150.jpg" alt="User" />
+
+                            {/* <img src="https://via.placeholder.com/150" alt="User" /> */}
                         </div>
                         <div className={`dropdown ${isDropdownOpen ? "show" : ""}`}>
                             <a href="/profile">Profile</a>

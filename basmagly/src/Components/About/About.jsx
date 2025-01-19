@@ -12,7 +12,7 @@ const AboutPage = () => {
             Logout
             </button>
         </nav>
-        <h2>About AI Study Assistant</h2>
+        <h2>About Basmagly</h2>
         <p className="about-description">
           AI Study Assistant is your 24/7 learning companion, designed to revolutionize 
           how students manage their academic journey. Our platform provides comprehensive 

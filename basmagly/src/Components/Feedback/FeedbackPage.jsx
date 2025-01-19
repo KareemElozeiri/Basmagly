@@ -1,29 +1,39 @@
+// FeedbackPage.jsx
 import React, { useState } from 'react';
-import "./FeedbackPage.css"
+import { useNavigate } from 'react-router-dom';
+import './FeedbackPage.css';
 
 const FeedbackPage = () => {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the feedback to your backend
-    // For now, we'll just console log and use mailto
-    console.log({ rating, feedback });
-    window.location.href = `mailto:basmagly@gmail.com?subject=Feedback&body=Rating: ${rating}%0D%0AFeedback: ${feedback}`;
+    setShowPopup(true);
+    // Reset form
+    setRating(0);
+    setFeedback('');
+    // Hide popup and redirect after 3 seconds
+    setTimeout(() => {
+      setShowPopup(false);
+      navigate('/home/default');
+    }, 3000);
   };
 
   return (
     <div className="feedback-container">
-        {/* Navbar Section */}
-        <nav className="navbar">
-            <button className="nav-button" onClick={() => (window.location.href = "/home/default")}>
-            Home
-            </button>
-            <button className="nav-button" onClick={() => (window.location.href = "/")}>
-            Logout
-            </button>
-        </nav>
+      {/* Navbar Section */}
+      <nav className="navbar">
+        <button className="nav-button" onClick={() => navigate('/home/default')}>
+          Home
+        </button>
+        <button className="nav-button" onClick={() => navigate('/')}>
+          Logout
+        </button>
+      </nav>
+
       <h2>We Value Your Feedback</h2>
       <form onSubmit={handleSubmit} className="feedback-form">
         <div className="rating-container">
@@ -54,11 +64,21 @@ const FeedbackPage = () => {
           Submit Feedback
         </button>
       </form>
-        <p className="contact-email">
-            Contact email: basmagly@gmail.com
-        </p>
+      <p className="contact-email">
+        Contact email: basmagly@gmail.com
+      </p>
+
+      {/* Thank you popup */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h3>Thank You!</h3>
+            <p>We appreciate your valuable feedback.</p>
+            <div className="popup-icon">✨</div>
+          </div>
+        </div>
+      )}
     </div>
-    
   );
 };
 
