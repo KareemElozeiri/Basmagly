@@ -129,3 +129,25 @@ class QuestionAnsweringView(BaseRAGView):
                 {"error": f"Error answering question: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+
+
+class SummaryQAView(BaseRAGView):
+    def get(self, request):
+        try:
+            user_id = request.user.id
+            summary = rag_service.generator.generate_summary(" ".join(
+                [doc.page_content for doc in rag_service.retriever.get_relevant_documents("general overview", user_id, k=10)]
+            ))
+            
+            qa_pairs = rag_service.generate_qa_from_documents(user_id, num_pairs=5)
+            
+            return Response({
+                "summary": summary,
+                "qa_pairs": qa_pairs
+            })
+        except Exception as e:
+            return Response(
+                {"error": f"Error generating summary and Q&A pairs: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

@@ -13,7 +13,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['profile_picture']
 
     def validate(self, attrs):
-        # Ensure user can only update their own profile
         attrs['user'] = self.context['request'].user
         return attrs
 

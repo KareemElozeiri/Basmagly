@@ -15,5 +15,6 @@ from .documents import (
 from .rag import (
     DocumentContextView,
     QuizGenerationView,
-    QuestionAnsweringView
+    QuestionAnsweringView,
+    SummaryQAView
 )

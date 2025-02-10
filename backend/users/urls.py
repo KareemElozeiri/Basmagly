@@ -14,7 +14,9 @@ from .views import (
     DocumentDownloadView,
     DocumentContextView,
     QuizGenerationView,
-    QuestionAnsweringView
+    QuestionAnsweringView,
+    SummaryQAView,
+    
 )
 
 urlpatterns = [
@@ -32,6 +34,7 @@ urlpatterns = [
     path('documents/<int:pk>/download/', DocumentDownloadView.as_view(), name='document_download'),
     path('chat/add_documents/', DocumentContextView.as_view(), name="add_chat_context"),
     path('chat/generate_quiz/', QuizGenerationView.as_view(), name="generate_quiz"),
-    path('chat/answer_question/', QuestionAnsweringView.as_view(), name="answer_questions")
+    path('chat/answer_question/', QuestionAnsweringView.as_view(), name="answer_questions"),
+    path('chat/summary_qa/', SummaryQAView.as_view(), name='summary_qa')
 
 ]
